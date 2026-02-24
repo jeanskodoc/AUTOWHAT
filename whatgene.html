@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>WhatsApp Auto - Gestion complète des prestations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root {
+            --whatsapp: #25D366;
+            --whatsapp-dark: #075e54;
+            --whatsapp-light: #dcf8c6;
+            --bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --text: #1e2a3a;
+            --text-light: #546e7a;
+            --border: #e4e7eb;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --danger: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--whatsapp-dark), var(--whatsapp));
+            color: white;
+            padding: 16px 20px;
+            border-radius: var(--radius) var(--radius) 0 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .main-panel {
+            background: var(--card-bg);
+            border-radius: 0 0 var(--radius) var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .phone-section {
+            background: #f8fafd;
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .phone-section label {
+            font-weight: 600;
+            color: var(--whatsapp-dark);
+            font-size: 0.9rem;
+        }
+
+        .phone-input-group {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .phone-input-group input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #f8fafd;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            color: var(--whatsapp-dark);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            resize: vertical;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--whatsapp);
+            box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 12px 0 8px;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+        }
+
+        .btn-primary {
+            background: var(--whatsapp);
+            border-color: var(--whatsapp-dark);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--whatsapp-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            border-color: #218838;
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            border-color: #e0a800;
+            color: #333;
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+            border-color: #138496;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border-color: #b02a37;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .prestations-panel {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin: 12px 0;
+            border: 2px solid var(--whatsapp-light);
+        }
+
+        .prestations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .prestations-header h4 {
+            color: var(--whatsapp-dark);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .prestations-stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .prestations-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .prestation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: white;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .prestation-item:hover {
+            border-color: var(--whatsapp);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .prestation-item.selected {
+            border-color: var(--whatsapp);
+            background: #f0faf0;
+        }
+
+        .prestation-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--whatsapp);
+            margin-top: 3px;
+        }
+
+        .prestation-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .prestation-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .prestation-link-input {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .prestation-link-input input {
+            flex: 1;
+            min-width: 200px;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .prestation-link-input input:focus {
+            outline: none;
+            border-color: var(--whatsapp);
+        }
+
+        .prestation-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .prestation-link-display {
+            font-size: 0.75rem;
+            color: var(--info);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            background: #f0f8ff;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .prestation-link-display:hover {
+            text-decoration: underline;
+            background: #e1f0fa;
+        }
+
+        .add-prestation-section {
+            background: #f8fafd;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px dashed var(--whatsapp);
+        }
+
+        .add-prestation-title {
+            font-weight: 600;
+            color: var(--whatsapp-dark);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .add-prestation-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .add-prestation-form input {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+
+        .add-prestation-form input:focus {
+            outline: none;
+            border-color: var(--whatsapp);
+        }
+
+        .prestation-counter {
+            background: var(--whatsapp-light);
+            color: var(--whatsapp-dark);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .whatsapp-preview {
+            background: #ece5dd;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .whatsapp-preview::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 20px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #ece5dd;
+        }
+
+        .message-preview {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .message-preview a {
+            color: var(--info);
+            text-decoration: none;
+        }
+
+        .message-preview a:hover {
+            text-decoration: underline;
+        }
+
+        .filter-section {
+            background: #f8fafd;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--whatsapp-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+        .stats-bar {
+            background: var(--whatsapp-dark);
+            color: white;
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+        }
+
+        .stats-item {
+            font-size: 0.85rem;
+        }
+
+        .stats-item span {
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .table-container {
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: white;
+            overflow-x: auto;
+            margin: 16px 0;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+            font-size: 0.8rem;
+        }
+
+        th {
+            background: var(--whatsapp-dark);
+            color: white;
+            padding: 10px 6px;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        tr:hover {
+            background: #f8fafd;
+        }
+
+        .action-cell {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-info {
+            background: #e1f5fe;
+            color: #01579b;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: var(--whatsapp);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+            color: #333;
+        }
+
+        .duplicate-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            margin: 10px 0;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--warning);
+        }
+
+        .text-small {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        .flex {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        .link-icon {
+            width: 14px;
+            height: 14px;
+            display: inline-block;
+            background: var(--info);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.71-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z'/%3E%3C/svg%3E") no-repeat center;
+            mask-size: contain;
+        }
+
+        .message-counter {
+            background: var(--whatsapp-light);
+            color: var(--whatsapp-dark);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                <path d="M19.05 4.91C17.18 3 14.69 2 12 2 6.5 2 2.05 6.32 2 11.8c-.02 1.75.43 3.45 1.3 5l-.9 3.8 3.9-.9c1.5.8 3.15 1.22 4.85 1.2h.05c5.45 0 9.9-4.32 9.95-9.8.03-2.6-1.02-5.05-2.95-6.89zM12 20.5c-1.4 0-2.78-.38-4-1.1l-.3-.15-2.4.55.65-2.3-.15-.3c-.75-1.3-1.15-2.8-1.15-4.3.03-4.4 3.6-8 8-8 2.15 0 4.15.85 5.65 2.35 1.5 1.5 2.35 3.5 2.35 5.65-.02 4.4-3.6 8-8 8zm4-5.9c-.25-.15-1.45-.7-1.65-.8-.2-.1-.4-.15-.55.15-.15.3-.6.8-.75.95-.15.2-.3.2-.55.05-.25-.15-1.05-.4-2-1.25-.75-.65-1.25-1.45-1.4-1.7-.15-.25 0-.4.1-.55.1-.1.2-.3.3-.4.1-.15.15-.25.2-.4.05-.15 0-.3-.05-.4-.05-.1-.55-1.3-.75-1.8-.2-.45-.4-.4-.55-.4h-.45c-.15 0-.4.05-.6.25-.2.2-.75.75-.75 1.85 0 1.1.8 2.15.9 2.3.15.2 1.55 2.4 3.75 3.3.5.2 1.05.35 1.6.45 1.05.2 2 .1 2.75-.2.85-.3 1.45-1.2 1.6-1.65.15-.45.15-.85.1-.95-.05-.1-.2-.15-.45-.25z"/>
+            </svg>
+            WhatsApp Auto - Gestionnaire de prestations
+        </h1>
+        <p>Ajoutez, modifiez et supprimez vos prestations avec leurs liens</p>
+    </div>
+
+    <div class="main-panel">
+        <div class="phone-section">
+            <label>📱 Votre numéro:</label>
+            <div class="phone-input-group">
+                <input type="text" id="senderNumber" placeholder="+22890123456" value="+228">
+                <button class="btn btn-success" id="saveSenderBtn">OK</button>
+            </div>
+            <span class="text-small tooltip" data-tooltip="Format international requis">ⓘ</span>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h3>📋 1. Coller les inscriptions</h3>
+                <textarea id="inputText" placeholder="Nouvelle inscription enseignant:
+Nom: Jean AWORA
+Téléphone: 22892871605
+Email: jean@email.com
+Ville: KARA
+Niveau: Lycée
+Matière: Maths"></textarea>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="extractAndSaveBtn">🔍 Extraire</button>
+                    <button class="btn" id="sampleDataBtn">📝 Exemple</button>
+                    <button class="btn" id="clearInputBtn">🗑️ Effacer</button>
+                </div>
+                
+                <div id="duplicateWarning" class="duplicate-warning" style="display:none;">
+                    ⚠️ Des doublons ont été détectés et ignorés
+                </div>
+                
+                <div class="text-small mt-2">
+                    <span class="badge badge-info">i</span> Un compte est unique par téléphone ET email
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>✉️ 2. Message avec liens</h3>
+                
+                <div class="prestations-panel">
+                    <div class="prestations-header">
+                        <h4>
+                            <span>📦 Catalogue de prestations</span>
+                            <span class="prestation-counter" id="prestationCount">0</span>
+                        </h4>
+                        <div class="prestations-stats">
+                            <button class="btn btn-sm btn-info" id="resetPrestationsBtn">↺ Par défaut</button>
+                            <button class="btn btn-sm btn-danger" id="clearAllPrestationsBtn">🗑️ Tout effacer</button>
+                        </div>
+                    </div>
+                    
+                    <div class="prestations-grid" id="prestationsList">
+                        <!-- Les prestations seront générées dynamiquement -->
+                    </div>
+                    
+                    <div class="add-prestation-section">
+                        <div class="add-prestation-title">➕ Ajouter une nouvelle prestation</div>
+                        <div class="add-prestation-form">
+                            <input type="text" id="newPrestationName" placeholder="Nom de la prestation (ex: Cours du soir)">
+                            <input type="url" id="newPrestationLink" placeholder="Lien web (https://...)">
+                            <button class="btn btn-success" id="addPrestationBtn">Ajouter</button>
+                        </div>
+                        <div class="text-small mt-2">
+                            Le lien est optionnel mais recommandé
+                        </div>
+                    </div>
+                </div>
+
+                <div class="whatsapp-preview">
+                    <div class="message-preview" id="messagePreview">
+                        Chargement...
+                    </div>
+                </div>
+
+                <div class="flex">
+                    <button class="btn btn-warning btn-sm" id="testMessageBtn">👁️ Actualiser l'aperçu</button>
+                    <button class="btn btn-success btn-sm" id="sendAllBtn">📤 Envoyer à tous</button>
+                    <button class="btn btn-sm" id="openWhatsAppWebBtn">🌐 WhatsApp Web</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>🔍 Recherche</label>
+                    <input type="text" id="filterText" placeholder="Nom, email...">
+                </div>
+                <div class="filter-group">
+                    <label>Ville</label>
+                    <select id="filterVille">
+                        <option value="">Toutes</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Niveau</label>
+                    <select id="filterNiveau">
+                        <option value="">Tous</option>
+                        <option value="Lycée">Lycée</option>
+                        <option value="Collège">Collège</option>
+                        <option value="Primaire">Primaire</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Statut</label>
+                    <select id="filterStatus">
+                        <option value="">Tous</option>
+                        <option value="sent">Envoyé</option>
+                        <option value="pending">En attente</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <button class="btn btn-primary btn-sm" id="applyFiltersBtn" style="width:100%;">Filtrer</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stats-item"><span id="totalCount">0</span> total</div>
+            <div class="stats-item"><span id="uniqueVilles">0</span> villes</div>
+            <div class="stats-item"><span id="sentCount">0</span> envoyés</div>
+            <div class="stats-item"><span id="pendingCount">0</span> en attente</div>
+            <div class="stats-item"><span id="prestationStats">0</span> prestations</div>
+        </div>
+
+        <h3 style="font-size:1rem; margin-bottom:10px;">📋 Liste des enseignants</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sél.</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Ville</th>
+                        <th>Niveau</th>
+                        <th>Matière</th>
+                        <th>Statut</th>
+                        <th>Date envoi</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="11" style="text-align:center; padding:40px;">Aucune donnée</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn btn-sm" id="exportFilteredBtn">📥 Export CSV</button>
+            <button class="btn btn-sm btn-danger" id="deleteAllBtn">🗑️ Tout supprimer</button>
+            <button class="btn btn-sm btn-warning" id="resetStatusBtn">🔄 Réinit. statuts</button>
+            <button class="btn btn-sm" id="checkDuplicatesBtn">🔍 Vérifier doublons</button>
+            <button class="btn btn-sm btn-info" id="exportPrestationsBtn">📤 Exporter prestations</button>
+            <button class="btn btn-sm btn-primary" id="sendSelectedBtn" disabled>📤 Envoyer sélection</button>
+            <span id="selectedCount" class="message-counter">0 sélectionné(s)</span>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+
+<script>
+    (function() {
+        // ==================== CONFIG ====================
+        const DB_NAME = 'WhatsAppPrestationsDB';
+        const DB_VERSION = 8;
+        const STORE_NAME = 'enseignants';
+        const PRESTATIONS_STORE = 'prestations';
+        
+        let db = null;
+        let prestations = [];
+        let senderNumber = '+228';
+        let selectedIds = new Set();
+
+        // ==================== PRESTATIONS PAR DÉFAUT ====================
+        const DEFAULT_PRESTATIONS = [
+            { 
+                name: 'Cours particuliers', 
+                link: 'https://eduservices.com/cours-particuliers',
+                selected: true 
+            },
+            { 
+                name: 'Soutien scolaire', 
+                link: 'https://eduservices.com/soutien',
+                selected: true 
+            },
+            { 
+                name: 'Préparation examens', 
+                link: 'https://eduservices.com/examens',
+                selected: true 
+            },
+            { 
+                name: 'Cours en ligne', 
+                link: 'https://eduservices.com/en-ligne',
+                selected: true 
+            },
+            { 
+                name: 'Coaching', 
+                link: 'https://eduservices.com/coaching',
+                selected: true 
+            },
+            { 
+                name: 'Formation continue', 
+                link: 'https://eduservices.com/formation',
+                selected: true 
+            }
+        ];
+
+        // ==================== INDEXEDDB ====================
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = () => reject('Erreur DB');
+                
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                        store.createIndex('email', 'email', { unique: false });
+                        store.createIndex('telephone', 'telephone', { unique: false });
+                        store.createIndex('email_telephone', ['email', 'telephone'], { unique: true });
+                    }
+                    
+                    if (!db.objectStoreNames.contains(PRESTATIONS_STORE)) {
+                        const prestationStore = db.createObjectStore(PRESTATIONS_STORE, { keyPath: 'id', autoIncrement: true });
+                        prestationStore.createIndex('name', 'name', { unique: true });
+                        
+                        DEFAULT_PRESTATIONS.forEach(p => {
+                            prestationStore.add(p);
+                        });
+                    }
+                };
+            });
+        }
+
+        // ==================== GESTION PRESTATIONS ====================
+        async function loadPrestations() {
+            return new Promise((resolve) => {
+                if (!db) return resolve(DEFAULT_PRESTATIONS);
+                
+                const transaction = db.transaction([PRESTATIONS_STORE], 'readonly');
+                const store = transaction.objectStore(PRESTATIONS_STORE);
+                const request = store.getAll();
+                
+                request.onsuccess = () => {
+                    const loaded = request.result || [];
+                    if (loaded.length === 0) {
+                        addDefaultPrestations();
+                        resolve(DEFAULT_PRESTATIONS);
+                    } else {
+                        resolve(loaded);
+                    }
+                };
+                
+                request.onerror = () => resolve(DEFAULT_PRESTATIONS);
+            });
+        }
+
+        function addDefaultPrestations() {
+            const transaction = db.transaction([PRESTATIONS_STORE], 'readwrite');
+            const store = transaction.objectStore(PRESTATIONS_STORE);
+            DEFAULT_PRESTATIONS.forEach(p => {
+                store.add({...p});
+            });
+        }
+
+        async function addPrestation(name, link) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([PRESTATIONS_STORE], 'readwrite');
+                const store = transaction.objectStore(PRESTATIONS_STORE);
+                
+                const prestation = {
+                    name: name.trim(),
+                    link: link.trim() || '#',
+                    selected: true
+                };
+                
+                const request = store.add(prestation);
+                request.onsuccess = () => resolve(prestation);
+                request.onerror = () => reject('Cette prestation existe déjà');
+            });
+        }
+
+        async function updatePrestation(id, updates) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction([PRESTATIONS_STORE], 'readwrite');
+                const store = transaction.objectStore(PRESTATIONS_STORE);
+                const getRequest = store.get(id);
+                
+                getRequest.onsuccess = () => {
+                    const data = getRequest.result;
+                    Object.assign(data, updates);
+                    store.put(data).onsuccess = () => resolve(data);
+                };
+            });
+        }
+
+        async function deletePrestation(id) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction([PRESTATIONS_STORE], 'readwrite');
+                transaction.objectStore(PRESTATIONS_STORE).delete(id).onsuccess = () => resolve();
+            });
+        }
+
+        async function deleteAllPrestations() {
+            return new Promise((resolve) => {
+                const transaction = db.transaction([PRESTATIONS_STORE], 'readwrite');
+                transaction.objectStore(PRESTATIONS_STORE).clear().onsuccess = () => resolve();
+            });
+        }
+
+        // ==================== AFFICHAGE DES PRESTATIONS ====================
+        async function renderPrestations() {
+            prestations = await loadPrestations();
+            
+            const container = document.getElementById('prestationsList');
+            container.innerHTML = '';
+            
+            prestations.sort((a, b) => a.name.localeCompare(b.name));
+            
+            prestations.forEach(p => {
+                const div = document.createElement('div');
+                div.className = `prestation-item ${p.selected ? 'selected' : ''}`;
+                div.dataset.id = p.id;
+                
+                div.innerHTML = `
+                    <input type="checkbox" class="prestation-checkbox" ${p.selected ? 'checked' : ''} data-id="${p.id}">
+                    <div class="prestation-content">
+                        <div class="prestation-name">${escapeHtml(p.name)}</div>
+                        <div class="prestation-link-input">
+                            <input type="url" class="prestation-link" value="${escapeHtml(p.link || '')}" placeholder="https://..." data-id="${p.id}">
+                            <div class="prestation-actions">
+                                <button class="btn-sm btn-info" onclick="window.updatePrestationLink(${p.id})">💾</button>
+                                <button class="btn-sm btn-danger" onclick="window.deletePrestationItem(${p.id})">🗑️</button>
+                            </div>
+                        </div>
+                        ${p.link && p.link !== '#' ? `
+                            <a href="${escapeHtml(p.link)}" target="_blank" class="prestation-link-display">
+                                <span class="link-icon"></span> ${escapeHtml(p.link.substring(0, 40))}...
+                            </a>
+                        ` : ''}
+                    </div>
+                `;
+                
+                container.appendChild(div);
+                
+                const checkbox = div.querySelector('.prestation-checkbox');
+                checkbox.addEventListener('change', async (e) => {
+                    p.selected = e.target.checked;
+                    await updatePrestation(p.id, { selected: p.selected });
+                    div.classList.toggle('selected', p.selected);
+                    updateMessagePreview();
+                    updatePrestationCount();
+                });
+                
+                const linkInput = div.querySelector('.prestation-link');
+                linkInput.addEventListener('change', async () => {
+                    await updatePrestation(p.id, { link: linkInput.value });
+                    updateMessagePreview();
+                });
+            });
+            
+            updateMessagePreview();
+            updatePrestationCount();
+        }
+
+        function updatePrestationCount() {
+            document.getElementById('prestationCount').textContent = prestations.length;
+            document.getElementById('prestationStats').textContent = prestations.length;
+        }
+
+        // ==================== FONCTIONS GLOBALES ====================
+        window.updatePrestationLink = async (id) => {
+            const input = document.querySelector(`.prestation-link[data-id="${id}"]`);
+            if (input) {
+                await updatePrestation(id, { link: input.value });
+                await renderPrestations();
+                showNotification('Lien mis à jour');
+            }
+        };
+
+        window.deletePrestationItem = async (id) => {
+            if (confirm('Supprimer cette prestation ?')) {
+                await deletePrestation(id);
+                await renderPrestations();
+                showNotification('Prestation supprimée');
+            }
+        };
+
+        // ==================== GESTION ENSEIGNANTS ====================
+        async function checkDuplicate(enseignant) {
+            return new Promise((resolve) => {
+                if (!db || !enseignant.email || !enseignant.telephone) {
+                    resolve(false);
+                    return;
+                }
+                
+                const transaction = db.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const index = store.index('email_telephone');
+                const key = [enseignant.email, enseignant.telephone];
+                
+                const request = index.getKey(key);
+                
+                request.onsuccess = () => {
+                    resolve(request.result !== undefined);
+                };
+            });
+        }
+
+        async function addEnseignant(enseignant) {
+            return new Promise(async (resolve, reject) => {
+                if (!db) return reject('DB non initialisée');
+                
+                enseignant.email = (enseignant.email || '').toLowerCase().trim();
+                enseignant.telephone = (enseignant.telephone || '').replace(/\s+/g, '');
+                enseignant.date_extraction = new Date().toISOString();
+                enseignant.whatsapp_sent = false;
+                enseignant.whatsapp_date = null;
+                
+                const isDuplicate = await checkDuplicate(enseignant);
+                
+                if (isDuplicate) {
+                    resolve({ added: false, reason: 'doublon_strict' });
+                    return;
+                }
+                
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                
+                try {
+                    const id = await new Promise((res, rej) => {
+                        const req = store.add(enseignant);
+                        req.onsuccess = () => res(req.result);
+                        req.onerror = () => rej(req.error);
+                    });
+                    
+                    resolve({ added: true, id });
+                } catch (error) {
+                    if (error.name === 'ConstraintError') {
+                        resolve({ added: false, reason: 'doublon_strict' });
+                    } else {
+                        reject(error);
+                    }
+                }
+            });
+        }
+
+        function getAllEnseignants() {
+            return new Promise((resolve) => {
+                if (!db) return resolve([]);
+                const transaction = db.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result || []);
+            });
+        }
+
+        function updateEnseignant(id, updates) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const getRequest = store.get(id);
+                
+                getRequest.onsuccess = () => {
+                    const data = getRequest.result;
+                    Object.assign(data, updates);
+                    store.put(data).onsuccess = () => resolve(data);
+                };
+            });
+        }
+
+        function deleteEnseignant(id) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                transaction.objectStore(STORE_NAME).delete(id).onsuccess = () => resolve();
+            });
+        }
+
+        function deleteAllEnseignants() {
+            return new Promise((resolve) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                transaction.objectStore(STORE_NAME).clear().onsuccess = () => resolve();
+            });
+        }
+
+        // ==================== EXTRACTION ====================
+        function extractEnseignantsFromText(text) {
+            const blocks = text.split(/(?:Nouvelle inscription enseignant:|\n\s*\n)/i);
+            const enseignants = [];
+            const seenKeys = new Set();
+            
+            const patterns = {
+                nom: /(?:^|\n)Nom:\s*(.+?)(?:\n|$)/i,
+                telephone: /(?:^|\n)Téléphone:\s*(.+?)(?:\n|$)/i,
+                email: /(?:^|\n)Email:\s*(.+?)(?:\n|$)/i,
+                ville: /(?:^|\n)Ville:\s*(.+?)(?:\n|$)/i,
+                niveau: /(?:^|\n)Niveau:\s*(.+?)(?:\n|$)/i,
+                matiere: /(?:^|\n)Matière:\s*(.+?)(?:\n|$)/i
+            };
+            
+            for (let block of blocks) {
+                if (block.trim().length < 10) continue;
+                
+                let enseignant = { nom: '', prenom: '', telephone: '', email: '', ville: '', niveau: '', matiere: '' };
+                
+                for (let [key, regex] of Object.entries(patterns)) {
+                    const match = block.match(regex);
+                    if (match && match[1]) {
+                        let value = match[1].trim();
+                        if (key === 'email') value = value.toLowerCase();
+                        if (key === 'telephone') {
+                            value = value.replace(/[^\d+]/g, '');
+                            if (!value.startsWith('+')) value = '+228' + value.replace(/^0+/, '');
+                        }
+                        enseignant[key] = value;
+                    }
+                }
+                
+                if (enseignant.nom) {
+                    const nameParts = enseignant.nom.split(' ');
+                    if (nameParts.length > 1) {
+                        enseignant.prenom = nameParts.slice(0, -1).join(' ');
+                        enseignant.nom = nameParts[nameParts.length - 1];
+                    } else {
+                        enseignant.prenom = enseignant.nom;
+                        enseignant.nom = '';
+                    }
+                }
+                
+                if (enseignant.email && enseignant.telephone) {
+                    const key = `${enseignant.email}|${enseignant.telephone}`;
+                    if (!seenKeys.has(key)) {
+                        seenKeys.add(key);
+                        enseignants.push(enseignant);
+                    }
+                }
+            }
+            
+            return enseignants;
+        }
+
+        // ==================== MESSAGE ====================
+        function generateWelcomeMessage(enseignant) {
+            const prenom = enseignant.prenom || 'cher enseignant';
+            
+            const prestationsList = prestations
+                .filter(p => p.selected)
+                .map(p => {
+                    if (p.link && p.link !== '#' && p.link.startsWith('http')) {
+                        return `• ${p.name} : ${p.link}`;
+                    } else {
+                        return `• ${p.name}`;
+                    }
+                })
+                .join('\n');
+            
+            return `Bonjour ${prenom},\n\nBienvenue chez EduServices ! 🎓\n\nNous sommes ravis de vous compter parmi nos enseignants partenaires.\n\nDécouvrez nos prestations :\n${prestationsList}\n\nCliquez sur les liens pour plus d'informations.\n\nNotre équipe reste à votre disposition.\n\nCordialement,\nL'équipe EduServices`;
+        }
+
+        // ==================== ENVOI WHATSAPP ====================
+        async function sendWhatsAppMessage(enseignant) {
+            if (!enseignant.telephone) throw new Error('Téléphone manquant');
+            
+            const message = generateWelcomeMessage(enseignant);
+            let phoneNumber = enseignant.telephone.replace(/\s+/g, '');
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank');
+            
+            if (!enseignant.whatsapp_sent) {
+                await updateEnseignant(enseignant.id, {
+                    whatsapp_sent: true,
+                    whatsapp_date: new Date().toISOString()
+                });
+            }
+            
+            return { status: 'success' };
+        }
+
+        async function sendToMultiple(enseignants) {
+            let sent = 0;
+            let skipped = 0;
+            
+            for (let ens of enseignants) {
+                try {
+                    await sendWhatsAppMessage(ens);
+                    sent++;
+                    if (sent < enseignants.length) {
+                        await new Promise(r => setTimeout(r, 1500));
+                    }
+                } catch (e) {
+                    skipped++;
+                }
+            }
+            
+            return { sent, skipped };
+        }
+
+        // ==================== INTERFACE ====================
+        let currentFilteredData = [];
+
+        async function refreshTable() {
+            const allData = await getAllEnseignants();
+            
+            const filterText = document.getElementById('filterText').value.toLowerCase();
+            const filterVille = document.getElementById('filterVille').value;
+            const filterNiveau = document.getElementById('filterNiveau').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+
+            let filtered = allData.filter(item => {
+                if (filterText && !(item.nom?.toLowerCase().includes(filterText) || 
+                                   item.prenom?.toLowerCase().includes(filterText) ||
+                                   item.email?.toLowerCase().includes(filterText))) return false;
+                if (filterVille && item.ville !== filterVille) return false;
+                if (filterNiveau && item.niveau !== filterNiveau) return false;
+                if (filterStatus === 'sent' && !item.whatsapp_sent) return false;
+                if (filterStatus === 'pending' && item.whatsapp_sent) return false;
+                return true;
+            });
+
+            currentFilteredData = filtered;
+
+            document.getElementById('totalCount').textContent = allData.length;
+            document.getElementById('sentCount').textContent = allData.filter(e => e.whatsapp_sent).length;
+            document.getElementById('pendingCount').textContent = allData.filter(e => !e.whatsapp_sent && e.telephone).length;
+            
+            const villes = [...new Set(allData.map(i => i.ville).filter(v => v))];
+            document.getElementById('uniqueVilles').textContent = villes.length;
+
+            const selectVille = document.getElementById('filterVille');
+            selectVille.innerHTML = '<option value="">Toutes</option>';
+            villes.sort().forEach(v => {
+                selectVille.innerHTML += `<option value="${v}">${v}</option>`;
+            });
+
+            const tbody = document.getElementById('tableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:30px;">Aucun résultat</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(item => {
+                const statutClass = item.whatsapp_sent ? 'badge-success' : 'badge-warning';
+                const statutText = item.whatsapp_sent ? '✅ Envoyé' : '⏳ En attente';
+                const dateEnvoi = item.whatsapp_date ? new Date(item.whatsapp_date).toLocaleDateString('fr-FR') : '-';
+                const isSelected = selectedIds.has(item.id);
+                
+                return `<tr>
+                    <td><input type="checkbox" class="row-select" data-id="${item.id}" ${isSelected ? 'checked' : ''} onchange="toggleSelection(${item.id})"></td>
+                    <td>${escapeHtml(item.nom || '')}</td>
+                    <td>${escapeHtml(item.prenom || '')}</td>
+                    <td>${escapeHtml(item.email || '')}</td>
+                    <td>${escapeHtml(item.telephone || '')}</td>
+                    <td>${escapeHtml(item.ville || '')}</td>
+                    <td>${escapeHtml(item.niveau || '')}</td>
+                    <td>${escapeHtml(item.matiere || '')}</td>
+                    <td><span class="badge ${statutClass}">${statutText}</span></td>
+                    <td>${escapeHtml(dateEnvoi)}</td>
+                    <td class="action-cell">
+                        <button class="btn btn-sm" onclick="sendSingleMessage(${item.id})" title="Envoyer">📤</button>
+                        <button class="btn btn-sm" onclick="deleteSingleEntry(${item.id})" title="Supprimer">🗑️</button>
+                        ${!item.whatsapp_sent ? `
+                            <button class="btn btn-sm btn-primary" onclick="sendAndMark(${item.id})" title="Envoyer et marquer">✓📤</button>
+                        ` : ''}
+                    </td>
+                </tr>`;
+            }).join('');
+            
+            updateSelectedCount();
+        }
+
+        function toggleSelection(id) {
+            if (selectedIds.has(id)) {
+                selectedIds.delete(id);
+            } else {
+                selectedIds.add(id);
+            }
+            updateSelectedCount();
+        }
+
+        window.toggleSelection = toggleSelection;
+        window.sendSingleMessage = async (id) => {
+            const allData = await getAllEnseignants();
+            const enseignant = allData.find(e => e.id === id);
+            if (enseignant) {
+                try {
+                    await sendWhatsAppMessage(enseignant);
+                    showNotification(`Lien ouvert pour ${enseignant.prenom}`);
+                    await refreshTable();
+                } catch (e) {
+                    showNotification('Erreur d\'envoi', 'error');
+                }
+            }
+        };
+
+        window.sendAndMark = async (id) => {
+            const allData = await getAllEnseignants();
+            const enseignant = allData.find(e => e.id === id);
+            if (enseignant) {
+                try {
+                    await sendWhatsAppMessage(enseignant);
+                    await updateEnseignant(id, { whatsapp_sent: true, whatsapp_date: new Date().toISOString() });
+                    showNotification(`Message envoyé à ${enseignant.prenom}`);
+                    await refreshTable();
+                } catch (e) {
+                    showNotification('Erreur d\'envoi', 'error');
+                }
+            }
+        };
+
+        window.deleteSingleEntry = async (id) => {
+            if (confirm('Supprimer cet enseignant ?')) {
+                await deleteEnseignant(id);
+                selectedIds.delete(id);
+                await refreshTable();
+                showNotification('Enseignant supprimé');
+            }
+        };
+
+        function updateSelectedCount() {
+            const count = selectedIds.size;
+            document.getElementById('selectedCount').textContent = `${count} sélectionné(s)`;
+            document.getElementById('sendSelectedBtn').disabled = count === 0;
+        }
+
+        function showNotification(msg, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.textContent = msg;
+            notif.className = `notification ${type === 'error' ? 'error' : type === 'warning' ? 'warning' : ''}`;
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 3000);
+        }
+
+        function updateMessagePreview() {
+            const demo = { prenom: 'Jean' };
+            document.getElementById('messagePreview').innerHTML = generateWelcomeMessage(demo)
+                .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ==================== INITIALISATION ====================
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await openDB();
+                
+                const saved = localStorage.getItem('senderNumber');
+                if (saved) {
+                    senderNumber = saved;
+                    document.getElementById('senderNumber').value = saved;
+                }
+                
+                await renderPrestations();
+                await refreshTable();
+
+                // Sauvegarde numéro
+                document.getElementById('saveSenderBtn').addEventListener('click', () => {
+                    const num = document.getElementById('senderNumber').value.trim();
+                    if (num) {
+                        senderNumber = num;
+                        localStorage.setItem('senderNumber', num);
+                        showNotification('Numéro enregistré');
+                    }
+                });
+
+                // Extraction
+                document.getElementById('extractAndSaveBtn').addEventListener('click', async () => {
+                    const text = document.getElementById('inputText').value;
+                    if (!text.trim()) {
+                        showNotification('Collez du texte', 'error');
+                        return;
+                    }
+                    
+                    const extracted = extractEnseignantsFromText(text);
+                    let added = 0;
+                    let duplicates = 0;
+                    
+                    for (let ens of extracted) {
+                        const result = await addEnseignant(ens);
+                        if (result.added) {
+                            added++;
+                        } else {
+                            duplicates++;
+                        }
+                    }
+                    
+                    await refreshTable();
+                    
+                    if (duplicates > 0) {
+                        document.getElementById('duplicateWarning').style.display = 'block';
+                        showNotification(`${added} ajouté(s), ${duplicates} doublon(s) ignoré(s)`, 'warning');
+                        setTimeout(() => {
+                            document.getElementById('duplicateWarning').style.display = 'none';
+                        }, 5000);
+                    } else {
+                        document.getElementById('duplicateWarning').style.display = 'none';
+                        showNotification(`${added} enseignant(s) ajouté(s)`);
+                    }
+                });
+
+                // Exemple
+                document.getElementById('sampleDataBtn').addEventListener('click', () => {
+                    document.getElementById('inputText').value = `Nouvelle inscription enseignant:
+Nom: Jean AWORA
+Téléphone: 22892871605
+Email: jean.awora@email.com
+Ville: KARA
+Niveau: Lycée
+Matière: Maths
+
+Nouvelle inscription enseignant:
+Nom: Marie KOFFI
+Téléphone: 22890112233
+Email: marie.koffi@email.com
+Ville: LOME
+Niveau: Collège
+Matière: Français`;
+                    
+                    showNotification('Exemple chargé');
+                });
+
+                document.getElementById('clearInputBtn').addEventListener('click', () => {
+                    document.getElementById('inputText').value = '';
+                });
+
+                document.getElementById('applyFiltersBtn').addEventListener('click', refreshTable);
+
+                // Ajout de prestation
+                document.getElementById('addPrestationBtn').addEventListener('click', async () => {
+                    const name = document.getElementById('newPrestationName').value.trim();
+                    const link = document.getElementById('newPrestationLink').value.trim();
+                    
+                    if (!name) {
+                        showNotification('Le nom de la prestation est requis', 'error');
+                        return;
+                    }
+                    
+                    try {
+                        await addPrestation(name, link);
+                        document.getElementById('newPrestationName').value = '';
+                        document.getElementById('newPrestationLink').value = '';
+                        await renderPrestations();
+                        showNotification(`Prestation "${name}" ajoutée avec succès`);
+                    } catch (e) {
+                        showNotification('Cette prestation existe déjà', 'error');
+                    }
+                });
+
+                // Réinitialiser prestations
+                document.getElementById('resetPrestationsBtn').addEventListener('click', async () => {
+                    if (confirm('Réinitialiser les prestations par défaut ?')) {
+                        await deleteAllPrestations();
+                        addDefaultPrestations();
+                        await renderPrestations();
+                        showNotification('Prestations réinitialisées');
+                    }
+                });
+
+                // Effacer toutes les prestations
+                document.getElementById('clearAllPrestationsBtn').addEventListener('click', async () => {
+                    if (confirm('Supprimer TOUTES les prestations ?')) {
+                        await deleteAllPrestations();
+                        await renderPrestations();
+                        showNotification('Toutes les prestations ont été supprimées');
+                    }
+                });
+
+                // Envoi à tous
+                document.getElementById('sendAllBtn').addEventListener('click', async () => {
+                    const allData = await getAllEnseignants();
+                    const pending = allData.filter(e => !e.whatsapp_sent && e.telephone);
+                    
+                    if (pending.length === 0) {
+                        showNotification('Aucun en attente', 'error');
+                        return;
+                    }
+                    
+                    const { sent, skipped } = await sendToMultiple(pending);
+                    await refreshTable();
+                    showNotification(`${sent} envoyé(s), ${skipped} ignoré(s)`);
+                });
+
+                // Envoi sélectionné
+                document.getElementById('sendSelectedBtn').addEventListener('click', async () => {
+                    if (selectedIds.size === 0) {
+                        showNotification('Aucun sélectionné', 'error');
+                        return;
+                    }
+                    
+                    const allData = await getAllEnseignants();
+                    const selected = allData.filter(e => selectedIds.has(e.id) && e.telephone);
+                    
+                    if (selected.length === 0) {
+                        showNotification('Aucun valide parmi la sélection', 'error');
+                        return;
+                    }
+                    
+                    const { sent, skipped } = await sendToMultiple(selected);
+                    
+                    if (confirm('Désélectionner les éléments après envoi ?')) {
+                        selectedIds.clear();
+                    }
+                    
+                    await refreshTable();
+                    showNotification(`${sent} envoyé(s) sur ${selected.length}`);
+                });
+
+                // Test aperçu
+                document.getElementById('testMessageBtn').addEventListener('click', updateMessagePreview);
+
+                // WhatsApp Web
+                document.getElementById('openWhatsAppWebBtn').addEventListener('click', () => {
+                    window.open('https://web.whatsapp.com', '_blank');
+                });
+
+                // Export CSV
+                document.getElementById('exportFilteredBtn').addEventListener('click', () => {
+                    if (currentFilteredData.length === 0) {
+                        showNotification('Aucune donnée', 'error');
+                        return;
+                    }
+                    
+                    let csv = '"Nom";"Prénom";"Email";"Téléphone";"Ville";"Niveau";"Matière";"Statut"\n';
+                    currentFilteredData.forEach(e => {
+                        csv += `"${e.nom || ''}";"${e.prenom || ''}";"${e.email || ''}";"${e.telephone || ''}";"${e.ville || ''}";"${e.niveau || ''}";"${e.matiere || ''}";"${e.whatsapp_sent ? 'Envoyé' : 'En attente'}"\n`;
+                    });
+                    
+                    const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'enseignants.csv';
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                });
+
+                // Export prestations
+                document.getElementById('exportPrestationsBtn').addEventListener('click', async () => {
+                    const prestations = await loadPrestations();
+                    let csv = '"Nom";"Lien";"Sélectionné"\n';
+                    prestations.forEach(p => {
+                        csv += `"${p.name}";"${p.link || ''}";"${p.selected ? 'Oui' : 'Non'}"\n`;
+                    });
+                    
+                    const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'prestations.csv';
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                });
+
+                // Supprimer tout
+                document.getElementById('deleteAllBtn').addEventListener('click', async () => {
+                    if (confirm('Supprimer TOUS les enseignants ?')) {
+                        await deleteAllEnseignants();
+                        selectedIds.clear();
+                        await refreshTable();
+                        showNotification('Base vidée');
+                    }
+                });
+
+                // Réinitialiser statuts
+                document.getElementById('resetStatusBtn').addEventListener('click', async () => {
+                    if (confirm('Réinitialiser tous les statuts ?')) {
+                        const allData = await getAllEnseignants();
+                        for (let ens of allData) {
+                            await updateEnseignant(ens.id, { whatsapp_sent: false, whatsapp_date: null });
+                        }
+                        await refreshTable();
+                        showNotification('Statuts réinitialisés');
+                    }
+                });
+
+                // Vérifier doublons
+                document.getElementById('checkDuplicatesBtn').addEventListener('click', async () => {
+                    const allData = await getAllEnseignants();
+                    const seen = new Set();
+                    let duplicates = 0;
+                    
+                    allData.forEach(item => {
+                        const key = `${item.email}|${item.telephone}`;
+                        if (seen.has(key)) {
+                            duplicates++;
+                        } else {
+                            seen.add(key);
+                        }
+                    });
+                    
+                    if (duplicates > 0) {
+                        showNotification(`${duplicates} doublon(s) potentiel(s) détecté(s)`, 'warning');
+                    } else {
+                        showNotification('Aucun doublon détecté');
+                    }
+                });
+
+                document.getElementById('filterStatus').addEventListener('change', refreshTable);
+                
+            } catch (error) {
+                console.error('Erreur initialisation:', error);
+                showNotification('Erreur de chargement', 'error');
+            }
+        });
+    })();
+</script>
+</body>
+</html>
